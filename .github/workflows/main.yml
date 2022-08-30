@@ -37,7 +37,7 @@ jobs:
 
     - name: Generate pull request title
       shell: bash
-      run: echo "##[set-output name=title;]$(git log ${GITHUB_BASE_REF#refs/heads/}..${{ steps.extract_branch.outputs.branch }} --no-merges --grep='YURI2' | grep -Eo 'YURI2-[0-9]{1,10}' | tr "\n" "," | sed 's/.$/] - ${{ steps.clean_title.outputs.title }}/' | sed 's/^/[/' | sed 's/,/, /')"
+      run: echo "##[set-output name=title;]$(git log ${GITHUB_BASE_REF#refs/heads/}..${{ steps.extract_branch.outputs.branch }} --no-merges --grep='YURI2' | grep -Eo 'YURI2-[0-9]{1,10}' | awk '{for (i=1;i<=NF;i++) if (!a[$i]++) printf("%s%s",$i,FS)}' | tr " " "," | sed 's/.$/] - ${{ steps.clean_title.outputs.title }}/' | sed 's/^/[/' | sed 's/,/, /')"
       id: generate_title
 
     - name: PR title updater
